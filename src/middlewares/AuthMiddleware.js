@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const AuthMiddleware = ({ children, isAuthenticated }) => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("shopi_token");
   useEffect(() => {
     if (!isAuthenticated && !token) {
       navigate("/login");

@@ -1,39 +1,57 @@
-import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthProvider";
+import axiosApi from "../axios";
 
-const API_URL = "http://127.0.0.1:8000/api/auth/login";
+const API_URL = "/auth/login";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const [loginInfo, setLoginInfo] = useState({});
+
   const handleLogin = async () => {
     try {
-      const {
-        data: { token },
-      } = await axios.post(API_URL, JSON.stringify(loginInfo), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      login(token.access_token);
+      const { data } = await axiosApi.post(API_URL, JSON.stringify(loginInfo));
+      login(data);
       navigate("/");
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      alert("Something went wrong with login");
+    }
+  };
+
+  const handleLoginWithGoogle = async () => {
+    try {
+      const { data } = await axiosApi.get("/auth/google");
+      window.location.href = data.redirectUrl;
+    } catch (error) {
+      alert("Something went wrong with google login");
+    }
+  };
+
+  const handleLoginWithEmail = async () => {
+    try {
+      await axiosApi.post("/auth/login/email-otp", {
+        email: loginInfo.email,
+      });
+      alert("Check your email for OTP code");
+    } catch (error) {
+      console.log(error.message);
+      alert("Something went wrong with email login");
     }
   };
 
   return (
     <div>
-      <h1>Login Page</h1>
-      <form>
+      <h1>Login</h1>
+      <form style={{ width: 360, display: "flex", flexDirection: "column" }}>
         <label htmlFor="email">Email</label>
         <input
           type="email"
           name="email"
           id="email"
+          required={true}
           onChange={(e) =>
             setLoginInfo({ ...loginInfo, email: e.target.value })
           }
@@ -48,7 +66,18 @@ const LoginPage = () => {
           }
         />
       </form>
-      <button onClick={handleLogin}>Login</button>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: 360,
+          marginTop: 12,
+        }}
+      >
+        <button onClick={handleLogin}>Login</button>
+        <button onClick={handleLoginWithGoogle}>Login with google</button>
+        <button onClick={handleLoginWithEmail}>Login email</button>
+      </div>
     </div>
   );
 };

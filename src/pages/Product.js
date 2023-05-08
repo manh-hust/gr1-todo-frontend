@@ -1,36 +1,32 @@
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../AuthProvider";
-const API_URL = "http://127.0.0.1:8000/api/products";
+import axiosApi from "../axios";
+const API_URL = "/auth/user";
 
-const Product = () => {
+const User = () => {
   const { token } = useContext(AuthContext);
-  const [products, setProducts] = useState([]);
+  const [user, setUser] = useState({});
   useEffect(() => {
-    const getProducts = async () => {
+    const getUserInfo = async () => {
       try {
-        const { data } = await axios.get(API_URL, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setProducts(data.data);
+        const { data } = await axiosApi.get(API_URL);
+        setUser(data);
       } catch (error) {
+        alert("Something went wrong with get user info");
         console.log(error);
       }
     };
-    getProducts();
+    getUserInfo();
   }, [token]);
   return (
     <div>
-      <h1>Product</h1>
-      <ul>
-        {products?.map((product) => (
-          <li key={product.id}>{product.title}</li>
-        ))}
-      </ul>
+      <h1>User</h1>
+      <div>
+        <h2>{user.email}</h2>
+        <p>{user.display_name}</p>
+      </div>
     </div>
   );
 };
 
-export default Product;
+export default User;
