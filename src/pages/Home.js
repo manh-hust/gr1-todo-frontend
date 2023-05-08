@@ -1,28 +1,18 @@
-import axios from "axios";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../AuthProvider";
-
-const API_URL = "http://localhost:8000/api/auth/logout";
+import axiosApi from "../axios";
+const API_URL = "/auth/logout";
 
 const Home = () => {
-  const { authenticated, logout, token } = useContext(AuthContext);
+  const { authenticated, logout } = useContext(AuthContext);
   const handleLogout = async () => {
     try {
-      axios.post(
-        API_URL,
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await axiosApi.post(API_URL);
       logout();
     } catch (error) {
       console.log(error);
+      alert("Something went wrong with logout");
     }
   };
   return (
@@ -30,12 +20,13 @@ const Home = () => {
       <h1>Home</h1>
       {authenticated ? (
         <>
-          <Link to="/products">Products</Link>
+          <Link to="/user">User</Link>
           <button onClick={handleLogout}>Logout</button>
         </>
       ) : (
         <>
           <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link>
         </>
       )}
     </>
