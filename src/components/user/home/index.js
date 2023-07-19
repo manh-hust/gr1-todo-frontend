@@ -16,8 +16,8 @@ import {
   Menu,
 } from 'antd';
 import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../../AuthProvider';
 import axiosApi from '../../../api/axiosApi';
+import { AuthContext } from '../../../providers/AuthProvider';
 const API_URL = '/auth/logout';
 
 function getItem(label, key, icon, children, type) {

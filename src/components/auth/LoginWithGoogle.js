@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../AuthProvider';
 import axiosApi from '../../api/axiosApi';
+import { AuthContext } from '../../providers/AuthProvider';
 const LoginWithGoogle = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();

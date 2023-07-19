@@ -3,13 +3,13 @@ import React, { useContext, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../AuthProvider';
 import axiosApi from '../../api/axiosApi';
 import AuthLayout from '../../layouts/AuthLayout';
+import { AuthContext } from '../../providers/AuthProvider';
 
 const API_URL = '/auth/login';
 
-const LoginPage = () => {
+const Login = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const [loginInfo, setLoginInfo] = useState({});
@@ -82,4 +82,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;

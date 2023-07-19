@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-const AuthMiddleware = ({ children, isAuthenticated }) => {
+import React, { useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../providers/AuthProvider';
+const AuthMiddleware = ({ children }) => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("shopi_token");
+  const { authenticated } = useContext(AuthContext);
+  const token = localStorage.getItem('shopi_token');
   useEffect(() => {
-    if (!isAuthenticated && !token) {
-      navigate("/login");
+    if (!authenticated && !token) {
+      navigate('/login');
     }
-  }, [isAuthenticated, navigate, token]);
+  }, [authenticated, navigate, token]);
 
   return <>{children}</>;
 };
