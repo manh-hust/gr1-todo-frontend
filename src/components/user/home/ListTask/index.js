@@ -23,7 +23,7 @@ const ListTask = ({ list, showDrawer, type }) => {
                 </Space>
               </div>
             }
-            onClick={showDrawer}
+            onClick={() => showDrawer(item)}
             description={item.members?.join(', ')}
           />
 

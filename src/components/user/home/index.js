@@ -1,16 +1,23 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, DatePicker, Drawer, Form, Input } from 'antd';
+import { Avatar, Button } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import axiosApi from '../../../api/axiosApi';
 import { home } from '../../../constants/pages/home';
 import { AuthContext } from '../../../providers/AuthProvider';
-import ListTask from '../ListTask';
 import Sidebar from '../Sidebar';
+import CreateTask from './CreateTask';
+import ListTask from './ListTask';
+import TaskDetail from './TaskDetail';
 
 const API_URL = '/auth/logout';
 
 const Home = () => {
   const { authenticated, logout } = useContext(AuthContext);
+  const [initLoading, setInitLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [list, setList] = useState([]);
+  const [selectedKey, setSelectedKey] = useState('todo');
+  const [selectedTask, setSelectedTask] = useState(null);
 
   const handleLogout = async () => {
     try {
@@ -21,18 +28,16 @@ const Home = () => {
       alert('Something went wrong with logout');
     }
   };
-  const [initLoading, setInitLoading] = useState(true);
-  const [open, setOpen] = useState(false);
 
-  const showDrawer = () => {
+  const showDrawer = (item) => {
     setOpen(true);
+    setSelectedTask(item);
   };
 
   const onClose = () => {
     setOpen(false);
+    setSelectedTask(null);
   };
-  const [list, setList] = useState([]);
-  const [selectedKey, setSelectedKey] = useState('todo');
 
   const data = {
     todo: [
@@ -105,7 +110,26 @@ const Home = () => {
         members: ['member 1', 'member 2', 'member 3'],
       },
     ],
-    history: ['History 1', 'History 2', 'History 3'],
+    history: [
+      {
+        id: 1,
+        name: 'History task 1',
+        endDate: '2021-06-28 12:00',
+        startDate: '2021-06-28 12:00',
+      },
+      {
+        id: 2,
+        name: 'History task 2',
+        endDate: '2021-06-28 12:00',
+        startDate: '2021-06-28 12:00',
+      },
+      {
+        id: 3,
+        name: 'History task 3',
+        endDate: '2021-06-28 12:00',
+        startDate: '2021-06-28 12:00',
+      },
+    ],
   };
 
   useEffect(() => {
@@ -121,40 +145,20 @@ const Home = () => {
         </div>
         <div className="border-b-2 border-gray-200 " />
         <Sidebar setSelectedKey={setSelectedKey} />
-        <div>
-          <Button className="w-full">{home.logout}</Button>
-        </div>
+        <Button className="w-full">{home.logout}</Button>
       </div>
 
       <div className="flex-1 h-screen overflow-y-auto relative">
         <h1 className="my-8 text-3xl px-4">{home.tasks}</h1>
-        <ListTask list={list} showDrawer={showDrawer} type={selectedKey} />
-        <Form className="absolute bottom-0 w-full px-8">
-          <Form.Item>
-            <Input
-              type="text"
-              placeholder="Enter task name"
-              className="h-12"
-              status="warning"
-            />
-            <Button type="primary">{/* <SendOutlined /> */}Send</Button>
-          </Form.Item>
-          <Form.Item className="border-l-2 absolute right-20 top-2">
-            <DatePicker className="w-full" bordered={false} />
-          </Form.Item>
-        </Form>
+        <ListTask
+          list={list}
+          showDrawer={showDrawer}
+          type={selectedKey}
+          setSelectedTask={setSelectedTask}
+        />
+        <CreateTask />
       </div>
-
-      <Drawer
-        title="Task detail"
-        placement="right"
-        onClose={onClose}
-        open={open}
-      >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Drawer>
+      <TaskDetail onClose={onClose} open={open} task={selectedTask} />
     </div>
   );
 };
