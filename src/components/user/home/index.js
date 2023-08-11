@@ -8,7 +8,6 @@ import Sidebar from '../Sidebar';
 import CreateTask from './CreateTask';
 import ListTask from './ListTask';
 import TaskDetail from './TaskDetail';
-
 const API_URL = '/auth/logout';
 
 const Home = () => {
@@ -158,7 +157,12 @@ const Home = () => {
         />
         <CreateTask />
       </div>
-      <TaskDetail onClose={onClose} open={open} task={selectedTask} />
+      <TaskDetail
+        onClose={onClose}
+        open={open}
+        task={selectedTask}
+        type={selectedKey}
+      />
     </div>
   );
 };

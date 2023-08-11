@@ -13,7 +13,7 @@ const CreateTask = () => {
           status="warning"
         />
       </Form.Item>
-      <Form.Item className="absolute right-72 top-2 border-l-2 w-32 pl-4">
+      <Form.Item className="absolute right-96 top-2 border-l-2 w-32 pl-4">
         <Select
           className="border-none w-full outline-none"
           placeholder="Select a type"
@@ -36,15 +36,19 @@ const CreateTask = () => {
           ]}
         />
       </Form.Item>
+      <Form.Item className="absolute right-56 top-2 border-l-2">
+        <DatePicker className="w-32" bordered={false} placeholder="Due date" />
+      </Form.Item>
       <Form.Item className="absolute right-28 top-2 border-l-2">
         <DatePicker
-          className="w-full"
+          className="w-24"
           bordered={false}
-          placeholder="Select end date"
+          placeholder="Time"
+          picker="time"
         />
       </Form.Item>
       <Form.Item className="absolute right-8 top-0">
-        <Button className="h-12 border-none flex items-center bg-blue-500 w-16 justify-center">
+        <Button className="h-12 border-none flex items-center bg-blue-500 w-16 justify-center rounded-l-none">
           <SendOutlined className="text-white text-xl" />
         </Button>
       </Form.Item>

@@ -1,6 +1,7 @@
 import {
   CalendarOutlined,
   ClockCircleOutlined,
+  DeleteOutlined,
   InfoCircleOutlined,
   InsertRowAboveOutlined,
   PlusOutlined,
@@ -8,23 +9,37 @@ import {
   UsergroupAddOutlined,
   ZoomInOutlined,
 } from '@ant-design/icons';
-import { Button, Drawer, List, Modal, Select, Tag } from 'antd';
+import { Button, Checkbox, Drawer, List, Modal, Select, Tag } from 'antd';
 import React, { useState } from 'react';
 const OPTIONS = ['Apples', 'Nails', 'Bananas', 'Helicopters'];
 
-const TaskDetail = ({ onClose, open, task }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const TaskDetail = ({ onClose, open, task, type }) => {
+  const doneCheck = type === 'done';
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  const showModalDelete = () => {
+    setIsDeleteModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const handleOkDelete = () => {
+    setIsDeleteModalOpen(false);
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const showModalInvite = () => {
+    setIsInviteModalOpen(true);
+  };
+
+  const handleOkInvite = () => {
+    setIsInviteModalOpen(false);
+  };
+
+  const handleCancelInvite = () => {
+    setIsInviteModalOpen(false);
   };
 
   const [selectedItems, setSelectedItems] = useState([]);
@@ -54,7 +69,7 @@ const TaskDetail = ({ onClose, open, task }) => {
       title: 'Members',
       icon: <UsergroupAddOutlined className="text-xl" />,
       content: (
-        <Button className="flex items-center" onClick={showModal}>
+        <Button className="flex items-center" onClick={showModalInvite}>
           <PlusOutlined />
           Invite
         </Button>
@@ -75,7 +90,11 @@ const TaskDetail = ({ onClose, open, task }) => {
   return (
     <>
       <Drawer
-        title={<h1 className="text-xl">{task?.name}</h1>}
+        title={
+          <h1 className="relative text-xl">
+            <Checkbox className="mr-4" checked={doneCheck} /> {task?.name}
+          </h1>
+        }
         placement="right"
         onClose={onClose}
         open={open}
@@ -100,12 +119,21 @@ const TaskDetail = ({ onClose, open, task }) => {
             </List.Item>
           )}
         />
+        <Button
+          className="w-full absolute bottom-0 right-0 rounded-none flex items-center justify-center bg-gray-200"
+          type="text"
+          onClick={showModalDelete}
+        >
+          <DeleteOutlined /> Delete
+        </Button>
       </Drawer>
+
+      {/* Invite members */}
       <Modal
         title="Invite members"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        open={isInviteModalOpen}
+        onOk={handleOkInvite}
+        onCancel={handleCancelInvite}
         footer={null}
       >
         <Select
@@ -119,9 +147,32 @@ const TaskDetail = ({ onClose, open, task }) => {
             label: item,
           }))}
         />
-        <Button className="mt-4 bg-blue-500" type="primary" onClick={handleOk}>
+        <Button
+          className="mt-4 bg-blue-500"
+          type="primary"
+          onClick={handleOkInvite}
+        >
           Invite
         </Button>
+      </Modal>
+
+      {/* Delete task */}
+      <Modal
+        title="Delete task"
+        open={isDeleteModalOpen}
+        onOk={handleOkDelete}
+        onCancel={handleCancelDelete}
+        footer={null}
+      >
+        <p>Are you sure you want to delete "{task?.name}"?</p>
+        <div className="flex justify-end mt-4">
+          <Button className="mr-4" onClick={handleCancelDelete}>
+            Cancel
+          </Button>
+          <Button type="primary" danger onClick={handleOkDelete}>
+            Delete
+          </Button>
+        </div>
       </Modal>
     </>
   );
