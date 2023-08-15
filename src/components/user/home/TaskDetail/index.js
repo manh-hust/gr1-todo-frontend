@@ -9,11 +9,19 @@ import {
   UsergroupAddOutlined,
   ZoomInOutlined,
 } from '@ant-design/icons';
-import { Button, Checkbox, Drawer, List, Modal, Select, Tag } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Drawer,
+  List,
+  Modal,
+  Select,
+  Tag,
+  Tooltip,
+} from 'antd';
 import React, { useState } from 'react';
-const OPTIONS = ['Apples', 'Nails', 'Bananas', 'Helicopters'];
 
-const TaskDetail = ({ onClose, open, task, type }) => {
+const TaskDetail = ({ onClose, open, task, type, members }) => {
   const doneCheck = type === 'done';
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
@@ -43,18 +51,17 @@ const TaskDetail = ({ onClose, open, task, type }) => {
   };
 
   const [selectedItems, setSelectedItems] = useState([]);
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
   const data = [
     {
       title: 'Start date',
       icon: <RocketOutlined className="text-xl" />,
-      content: task?.startDate,
+      content: task?.startAt,
     },
     {
       title: 'Due date',
       icon: <CalendarOutlined className="text-xl" />,
-      content: task?.endDate,
+      content: task?.endAt,
     },
     {
       title: 'Remind me',
@@ -63,7 +70,7 @@ const TaskDetail = ({ onClose, open, task, type }) => {
     {
       title: 'Type',
       icon: <InsertRowAboveOutlined className="text-xl" />,
-      content: <Tag color="violet">Homework</Tag>,
+      content: task?.tags.map((tag) => <Tag color={tag.color}>{tag.name}</Tag>),
     },
     {
       title: 'Members',
@@ -74,7 +81,13 @@ const TaskDetail = ({ onClose, open, task, type }) => {
           Invite
         </Button>
       ),
-      description: task?.members?.join(', '),
+      description: task?.members?.map((member) => (
+        <Tooltip title={member.email}>
+          <span className="mr-2 cursor-pointer hover:text-blue-500">
+            {member.name}
+          </span>
+        </Tooltip>
+      )),
     },
     {
       title: 'Description',
@@ -84,7 +97,7 @@ const TaskDetail = ({ onClose, open, task, type }) => {
     {
       title: 'Note',
       icon: <InfoCircleOutlined className="text-xl" />,
-      description: task?.status,
+      description: task?.note,
     },
   ];
   return (
@@ -92,7 +105,8 @@ const TaskDetail = ({ onClose, open, task, type }) => {
       <Drawer
         title={
           <h1 className="relative text-xl">
-            <Checkbox className="mr-4" checked={doneCheck} /> {task?.name}
+            <Checkbox className="mr-4 scale-150" checked={doneCheck} />{' '}
+            {task?.title}
           </h1>
         }
         placement="right"
@@ -140,11 +154,11 @@ const TaskDetail = ({ onClose, open, task, type }) => {
           mode="multiple"
           placeholder="Select members . . ."
           value={selectedItems}
-          onChange={setSelectedItems}
+          onChange={(value) => setSelectedItems(value)}
           className="w-full mt-8"
-          options={filteredOptions.map((item) => ({
-            value: item,
-            label: item,
+          options={members.map((item) => ({
+            value: item.id,
+            label: item.name,
           }))}
         />
         <Button

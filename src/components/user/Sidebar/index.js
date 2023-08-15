@@ -2,7 +2,6 @@ import {
   AppstoreOutlined,
   CalendarOutlined,
   CheckCircleOutlined,
-  FullscreenExitOutlined,
   HistoryOutlined,
   NotificationOutlined,
   ShareAltOutlined,
@@ -23,7 +22,7 @@ const getItem = (label, key, icon, children, type) => {
 const items = [
   getItem(home.tasks, 'tasks', <AppstoreOutlined />, [
     getItem(home.todo, 'todo', <CalendarOutlined />),
-    getItem(home.inProgress, 'inProgress', <FullscreenExitOutlined />),
+    // getItem(home.inProgress, 'inProgress', <FullscreenExitOutlined />),
     getItem(home.done, 'done', <CheckCircleOutlined />),
   ]),
   getItem(home.sharingTasks, 'sharingTasks', <ShareAltOutlined />),

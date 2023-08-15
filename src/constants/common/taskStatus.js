@@ -1,5 +1,5 @@
-export default taskStatus = {
-  TODO: 1,
-  INPROGRESS: 2,
-  DONE: 3,
+export const taskStatus = {
+  TODO: 0,
+  INPROGRESS: 1,
+  DONE: 2,
 };
