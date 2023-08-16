@@ -9,7 +9,7 @@ import Sidebar from '../Sidebar';
 import CreateTask from './CreateTask';
 import ListTask from './ListTask';
 import TaskDetail from './TaskDetail';
-const API_URL = '/auth/logout';
+const API_URL = '/auth/logout.pou';
 
 const Home = () => {
   const [refresh, setRefresh] = useState(false);
