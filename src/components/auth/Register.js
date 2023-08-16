@@ -1,41 +1,47 @@
-import { Button, Form, Input } from 'antd';
-import { useState } from 'react';
+import { Button, Form, Input, message } from 'antd';
 import { FcGoogle } from 'react-icons/fc';
-import { useNavigate } from 'react-router-dom';
-import axiosApi from '../../api/axiosApi';
+import { Link, useNavigate } from 'react-router-dom';
+import { loginByGoogle, register } from '../../api/authApi';
 import AuthLayout from '../../layouts/AuthLayout';
-
-const API_URL = '/auth/register';
 
 const Register = () => {
   const navigate = useNavigate();
-  const [loginInfo, setLoginInfo] = useState({});
-
-  const handleRegister = async () => {
+  const [messageApi, contextHolder] = message.useMessage();
+  const handleRegister = async (value) => {
     try {
-      const response = await axiosApi.post(API_URL, JSON.stringify(loginInfo));
+      const response = await register(value);
       if (response.success) {
-        alert('Register success, can login now');
+        messageApi.open({
+          type: 'success',
+          content: 'Register successfully, please login',
+        });
         navigate('/login');
       }
     } catch (error) {
-      alert('Something went wrong with register');
+      messageApi.open({
+        type: 'error',
+        content: 'Register failed. Please try again later',
+      });
     }
   };
 
   const handleRegisterWithGoogle = async () => {
     try {
-      const { data } = await axiosApi.get('/auth/google');
+      const { data } = await loginByGoogle();
       window.location.href = data.redirectUrl;
     } catch (error) {
       console.log(error.message);
-      alert('Something went wrong with google login');
+      messageApi.open({
+        type: 'error',
+        content: 'Register failed. Please try again later',
+      });
     }
   };
 
   return (
     <AuthLayout>
-      <div className="w-[480px] h-[600px] shadow-2xl shadow-yellow-200">
+      {contextHolder}
+      <div className="w-[480px] h-[640px] shadow-2xl shadow-yellow-200">
         <h1 className="text-center text-3xl mb-4">Register</h1>
         <Form
           name="form_item_path"
@@ -43,17 +49,83 @@ const Register = () => {
           onFinish={handleRegister}
           className="px-8"
         >
-          <Form.Item name="name" label="Username">
+          <Form.Item
+            name="name"
+            label="Username"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your username',
+              },
+              {
+                min: 3,
+                message: 'Username must be at least 3 characters',
+              },
+              {
+                max: 255,
+                message: 'Username must be at most 255 characters',
+              },
+            ]}
+          >
             <Input className="h-12" />
           </Form.Item>
-          <Form.Item name="email" label="Email">
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your email',
+              },
+              {
+                type: 'email',
+                message: 'Please input valid email',
+              },
+            ]}
+          >
             <Input className="h-12" />
           </Form.Item>
-          <Form.Item name="password" label="Password">
-            <Input className="h-12" />
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your password',
+              },
+              {
+                min: 6,
+                message: 'Password must be at least 6 characters',
+              },
+              {
+                max: 30,
+                message: 'Password must be at most 30 characters',
+              },
+            ]}
+          >
+            <Input className="h-12" type="password" />
           </Form.Item>
-          <Form.Item name="password_confirmation" label="Confirm password">
-            <Input className="h-12" />
+          <Form.Item
+            name="password_confirmation"
+            label="Confirm password"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your password confirmation',
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error('Password confirmation does not match')
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input className="h-12" type="password" />
           </Form.Item>
           <Button
             htmlType="submit"
@@ -63,11 +135,14 @@ const Register = () => {
           </Button>
           <Button
             onClick={handleRegisterWithGoogle}
-            className="w-full text-xl h-12 flex items-center justify-center"
+            className="w-full text-xl h-12 flex items-center justify-center mb-8"
           >
             <FcGoogle className="mr-2" />
             Use google account
           </Button>
+          <Link to="/login" className="text-center block mt-4">
+            Already have an account? Login
+          </Link>
         </Form>
       </div>
     </AuthLayout>

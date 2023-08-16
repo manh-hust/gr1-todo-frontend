@@ -1,32 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { getUser } from '../api/authApi';
 
 export const AuthContext = React.createContext();
 
 const AuthProvider = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(false);
-  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
-    const storedToken = localStorage.getItem("shopi_token");
+    const storedToken = localStorage.getItem('todo-token');
     if (storedToken) {
-      setToken(storedToken);
       setAuthenticated(true);
     }
   }, []);
 
-  const login = (data) => {
-    if (!data.access_token) return;
-    localStorage.setItem("shopi_token", data.access_token);
-    localStorage.setItem("shopi_refresh_token", data.refresh_token);
-    localStorage.setItem("shopi_expires_in", data.expires_in);
-    setToken(data.access_token);
+  const login = async (data) => {
+    if (!data.token) return;
+    localStorage.setItem('todo-token', data.token);
     setAuthenticated(true);
+    try {
+      const response = await getUser();
+      if (response.success) {
+        setUser(response.data);
+      }
+    } catch (error) {}
   };
 
   const logout = () => {
-    localStorage.removeItem("shopi_token");
-    localStorage.removeItem("shopi_refresh_token");
-    localStorage.removeItem("shopi_expires_in");
-    setToken(null);
+    localStorage.removeItem('todo-token');
     setAuthenticated(false);
   };
 
@@ -35,10 +36,9 @@ const AuthProvider = ({ children }) => {
       value={{
         authenticated,
         setAuthenticated,
-        token,
-        setToken,
         login,
         logout,
+        user,
       }}
     >
       {children}

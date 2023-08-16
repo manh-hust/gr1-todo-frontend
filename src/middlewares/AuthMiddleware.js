@@ -4,7 +4,7 @@ import { AuthContext } from '../providers/AuthProvider';
 const AuthMiddleware = ({ children }) => {
   const navigate = useNavigate();
   const { authenticated } = useContext(AuthContext);
-  const token = localStorage.getItem('shopi_token');
+  const token = localStorage.getItem('todo-token');
   useEffect(() => {
     if (!authenticated && !token) {
       navigate('/login');
