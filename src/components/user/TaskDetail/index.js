@@ -20,9 +20,12 @@ import {
   Tooltip,
 } from 'antd';
 import React, { useState } from 'react';
+import { taskStatus } from '../../../constants/common/taskStatus';
+import useFetchTaskData from '../../../hooks/useFetchTaskData';
 
-const TaskDetail = ({ onClose, open, task, type, members }) => {
-  const doneCheck = type === 'done';
+const TaskDetail = ({ onClose, open, task, userId }) => {
+  const doneCheck = task?.status === taskStatus.DONE;
+  const { members } = useFetchTaskData(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
@@ -70,12 +73,14 @@ const TaskDetail = ({ onClose, open, task, type, members }) => {
     {
       title: 'Type',
       icon: <InsertRowAboveOutlined className="text-xl" />,
-      content: task?.tags.map((tag) => <Tag color={tag.color}>{tag.name}</Tag>),
+      content: task?.tags?.map((tag) => (
+        <Tag color={tag.color}>{tag.name}</Tag>
+      )),
     },
     {
       title: 'Members',
       icon: <UsergroupAddOutlined className="text-xl" />,
-      content: (
+      content: !doneCheck && (
         <Button className="flex items-center" onClick={showModalInvite}>
           <PlusOutlined />
           Invite
@@ -84,7 +89,8 @@ const TaskDetail = ({ onClose, open, task, type, members }) => {
       description: task?.members?.map((member) => (
         <Tooltip title={member.email}>
           <span className="mr-2 cursor-pointer hover:text-blue-500">
-            {member.name}
+            {member.id === userId ? 'You' : member.name}
+            {member.isOwner && '(Owner)'}
           </span>
         </Tooltip>
       )),

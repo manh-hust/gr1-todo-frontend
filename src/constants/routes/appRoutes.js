@@ -3,4 +3,6 @@ export const APP_ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
   GOOGLE_CALLBACK: '/callback/google',
+  SHARING: '/sharing',
+  HISTORY: '/history',
 };

@@ -1,5 +1,12 @@
+import SideBarMenu from './SideBarMenu';
+
 const MainLayout = ({ children }) => {
-  return <div>{children}</div>;
+  return (
+    <div className="flex">
+      <SideBarMenu />
+      {children}
+    </div>
+  );
 };
 
 export default MainLayout;

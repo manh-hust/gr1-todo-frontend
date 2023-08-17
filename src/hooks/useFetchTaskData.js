@@ -1,18 +1,32 @@
 import { useEffect, useState } from 'react';
-import { getAllMembers, getAllTags, getAllTasks } from '../api/taskApi';
+import {
+  getAllMembers,
+  getAllTags,
+  getDoneTask,
+  getSharingTask,
+  getTodoTask,
+} from '../api/taskApi';
 
 const useFetchTaskData = (refetch) => {
-  const [allTask, setAllTask] = useState({});
+  const [todoTasks, setTodoTasks] = useState([]);
+  const [doneTasks, setDoneTasks] = useState([]);
+  const [sharingTasks, setSharingTasks] = useState([]);
+
   const [tags, setTags] = useState([]);
   const [members, setMembers] = useState([]);
   const [error, setError] = useState(null);
   useEffect(() => {
     const fetchAllTask = async () => {
       try {
-        const response = await getAllTasks();
+        const todoTasks = await getTodoTask();
+        const doneTasks = await getDoneTask();
+        const sharingTasks = await getSharingTask();
         const tags = await getAllTags();
         const members = await getAllMembers();
-        setAllTask(response.data);
+
+        setTodoTasks(todoTasks.data);
+        setDoneTasks(doneTasks.data);
+        setSharingTasks(sharingTasks.data);
         setTags(tags.data);
         setMembers(members.data);
       } catch (error) {
@@ -22,7 +36,7 @@ const useFetchTaskData = (refetch) => {
     fetchAllTask();
   }, [refetch]);
 
-  return { allTask, error, tags, members };
+  return { todoTasks, sharingTasks, doneTasks, error, tags, members };
 };
 
 export default useFetchTaskData;

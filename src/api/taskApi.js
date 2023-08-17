@@ -1,7 +1,17 @@
 import axiosApi from './axiosApi';
 
-export const getAllTasks = async () => {
-  const url = '/tasks';
+export const getTodoTask = async () => {
+  const url = '/tasks/todo';
+  return await axiosApi.get(url);
+};
+
+export const getDoneTask = async () => {
+  const url = '/tasks/done';
+  return await axiosApi.get(url);
+};
+
+export const getSharingTask = async () => {
+  const url = '/tasks/sharing';
   return await axiosApi.get(url);
 };
 
