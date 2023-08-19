@@ -1,45 +1,36 @@
 import {
-  AppstoreOutlined,
   CalendarOutlined,
-  CheckCircleOutlined,
   HistoryOutlined,
   NotificationOutlined,
   ShareAltOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 import React from 'react';
-import { home } from '../../../constants/pages/home';
+import { Link, useLocation } from 'react-router-dom';
 
-const getItem = (label, key, icon, children, type) => {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-  };
-};
-const items = [
-  getItem(home.tasks, 'tasks', <AppstoreOutlined />, [
-    getItem(home.todo, 'todo', <CalendarOutlined />),
-    // getItem(home.inProgress, 'inProgress', <FullscreenExitOutlined />),
-    getItem(home.done, 'done', <CheckCircleOutlined />),
-  ]),
-  getItem(home.sharingTasks, 'sharingTasks', <ShareAltOutlined />),
-  getItem(home.history, 'history', <HistoryOutlined />),
-  getItem(home.notifications, 'notifications', <NotificationOutlined />),
-];
+const Sidebar = () => {
+  const { pathname } = useLocation();
 
-const Sidebar = ({ setSelectedKey }) => {
   return (
     <Menu
       mode="inline"
-      defaultOpenKeys={['tasks']}
-      defaultSelectedKeys={['todo']}
-      items={items}
+      defaultSelectedKeys={['tasks']}
       className="pt-8 h-4/5"
-      onClick={(e) => setSelectedKey(e.key)}
-    />
+      selectedKeys={pathname === '/' ? ['tasks'] : pathname.split('/').slice(1)}
+    >
+      <Menu.Item key="tasks" icon={<CalendarOutlined />}>
+        <Link to="/">Tasks</Link>
+      </Menu.Item>
+      <Menu.Item key="sharing" icon={<ShareAltOutlined />}>
+        <Link to="/sharing">Sharing Tasks</Link>
+      </Menu.Item>
+      <Menu.Item key="history" icon={<HistoryOutlined />}>
+        <Link to="/history">History</Link>
+      </Menu.Item>
+      <Menu.Item key="notifications" icon={<NotificationOutlined />}>
+        <Link to="/notifications">Notifications</Link>
+      </Menu.Item>
+    </Menu>
   );
 };
 
