@@ -18,16 +18,19 @@ import {
   Select,
   Tag,
   Tooltip,
+  message,
 } from 'antd';
 import React, { useState } from 'react';
+import { inviteMember } from '../../../api/taskApi';
 import { taskStatus } from '../../../constants/common/taskStatus';
-import useFetchTaskData from '../../../hooks/useFetchTaskData';
+import useFetchData from '../../../hooks/useFetchData';
 
 const TaskDetail = ({ onClose, open, task, userId }) => {
   const doneCheck = task?.status === taskStatus.DONE;
-  const { members } = useFetchTaskData(false);
+  const { data: members } = useFetchData('/members');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const showModalDelete = () => {
     setIsDeleteModalOpen(true);
@@ -45,15 +48,30 @@ const TaskDetail = ({ onClose, open, task, userId }) => {
     setIsInviteModalOpen(true);
   };
 
-  const handleOkInvite = () => {
-    setIsInviteModalOpen(false);
+  const handleOkInvite = async () => {
+    try {
+      const response = await inviteMember({ members: selectedItems }, task.id);
+      if (response.success) {
+        messageApi.open({
+          type: 'success',
+          content: 'Invite successfully!',
+        });
+      }
+      setIsInviteModalOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCancelInvite = () => {
     setIsInviteModalOpen(false);
   };
 
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState(
+    task?.members?.map((member) => {
+      return member.id;
+    })
+  );
 
   const data = [
     {
@@ -108,6 +126,7 @@ const TaskDetail = ({ onClose, open, task, userId }) => {
   ];
   return (
     <>
+      {contextHolder}
       <Drawer
         title={
           <h1 className="relative text-xl">
@@ -162,10 +181,12 @@ const TaskDetail = ({ onClose, open, task, userId }) => {
           value={selectedItems}
           onChange={(value) => setSelectedItems(value)}
           className="w-full mt-8"
-          options={members.map((item) => ({
-            value: item.id,
-            label: item.name,
-          }))}
+          options={members
+            .map((item) => ({
+              value: item.id,
+              label: item.name,
+            }))
+            .filter((item) => item.value !== userId)}
         />
         <Button
           className="mt-4 bg-blue-500"

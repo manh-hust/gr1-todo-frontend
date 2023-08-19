@@ -5,6 +5,7 @@ import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
 import HistoryPage from '../pages/user/HistoryPage';
 import HomePage from '../pages/user/HomePage';
+import NotiPage from '../pages/user/NotiPage';
 import SharingPage from '../pages/user/SharingPage';
 
 export const routes = [
@@ -36,6 +37,11 @@ export const routes = [
   {
     path: APP_ROUTES.HISTORY,
     element: <HistoryPage />,
+    isPrivate: true,
+  },
+  {
+    path: APP_ROUTES.NOTI,
+    element: <NotiPage />,
     isPrivate: true,
   },
 ];

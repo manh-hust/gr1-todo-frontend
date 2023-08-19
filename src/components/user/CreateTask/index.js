@@ -2,7 +2,7 @@ import { PlusOutlined, SendOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Form, Input, Select } from 'antd';
 import React, { useState } from 'react';
 import { createTask } from '../../../api/taskApi';
-const CreateTask = ({ tags, setRefresh }) => {
+const CreateTask = ({ tags, setIsRefresh }) => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
 
@@ -28,7 +28,7 @@ const CreateTask = ({ tags, setRefresh }) => {
       if (res.success) {
         form.resetFields();
         setOpen(false);
-        setRefresh((prev) => !prev);
+        setIsRefresh((prev) => !prev);
       }
     } catch (error) {
       console.log(error);
