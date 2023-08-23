@@ -6,4 +6,6 @@ export const APP_ROUTES = {
   SHARING: '/sharing',
   HISTORY: '/history',
   NOTI: '/notifications',
+  ADMIN_LOGIN: '/admin/login',
+  ADMIN_NOTI: '/admin/notifications',
 };

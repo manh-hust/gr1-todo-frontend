@@ -1,5 +1,7 @@
 import React from 'react';
 import { APP_ROUTES } from '../constants/routes/appRoutes';
+import AdminLoginPage from '../pages/admin/AdminLoginPage';
+import AdminNotiPage from '../pages/admin/AdminNotiPage';
 import GoogleCallBack from '../pages/auth/GoogleCallBack';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
@@ -42,6 +44,16 @@ export const routes = [
   {
     path: APP_ROUTES.NOTI,
     element: <NotiPage />,
+    isPrivate: true,
+  },
+  {
+    path: APP_ROUTES.ADMIN_LOGIN,
+    element: <AdminLoginPage />,
+    isPrivate: false,
+  },
+  {
+    path: APP_ROUTES.ADMIN_NOTI,
+    element: <AdminNotiPage />,
     isPrivate: true,
   },
 ];

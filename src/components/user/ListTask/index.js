@@ -105,7 +105,7 @@ const ListTask = ({ list, setIsRefresh }) => {
           </List.Item>
         )}
       />
-      <Divider orientation="left">Upcoming</Divider>
+      <Divider orientation="left">Other</Divider>
       <List
         className="px-8"
         footer={<div></div>}
