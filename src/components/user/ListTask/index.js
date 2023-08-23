@@ -5,12 +5,13 @@ import { taskStatus } from '../../../constants/common/taskStatus';
 import { AuthContext } from '../../../providers/AuthProvider';
 import TaskDetail from '../TaskDetail';
 
-const ListTask = ({ list, setRefresh }) => {
+const ListTask = ({ list, setIsRefresh }) => {
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [task, setTask] = useState({});
   const [todayTasks, setTodayTasks] = useState([]);
   const [otherTasks, setOtherTasks] = useState([]);
+
   const handleCheck = async (id) => {
     try {
       const data = {
@@ -19,7 +20,7 @@ const ListTask = ({ list, setRefresh }) => {
       };
       const res = await updateStatus(id, data);
       if (res.success) {
-        setRefresh((prev) => !prev);
+        setIsRefresh((prev) => !prev);
       }
     } catch (error) {
       console.log(error);
@@ -31,8 +32,6 @@ const ListTask = ({ list, setRefresh }) => {
 
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
-    console.log(list);
-
     list.sort((a, b) => {
       if (a.startAt < b.startAt) return -1;
       if (a.startAt > b.startAt) return 1;
@@ -44,6 +43,7 @@ const ListTask = ({ list, setRefresh }) => {
       return task.startAt.slice(0, 10) === today;
     });
     const otherTasks = list.filter((task) => {
+      if (task.endAt) return task.endAt.slice(0, 10) !== today;
       return task.startAt.slice(0, 10) !== today;
     });
     setTodayTasks(todayTasks);
@@ -62,10 +62,6 @@ const ListTask = ({ list, setRefresh }) => {
           <List.Item
             className="cursor-pointer border-b-[1px] border-black"
             key={item.id}
-            onClick={() => {
-              setOpen(true);
-              setTask(item);
-            }}
           >
             <Checkbox
               className="mr-4 scale-150"
@@ -74,6 +70,10 @@ const ListTask = ({ list, setRefresh }) => {
               checked={item.status === taskStatus.DONE}
             />
             <List.Item.Meta
+              onClick={() => {
+                setOpen(true);
+                setTask(item);
+              }}
               title={
                 <div className="flex">
                   <h1
@@ -115,10 +115,6 @@ const ListTask = ({ list, setRefresh }) => {
           <List.Item
             className="cursor-pointer border-b-[1px] border-black"
             key={item.id}
-            onClick={() => {
-              setOpen(true);
-              setTask(item);
-            }}
           >
             <Checkbox
               className="mr-4 scale-150"
@@ -127,6 +123,10 @@ const ListTask = ({ list, setRefresh }) => {
               checked={item.status === taskStatus.DONE}
             />
             <List.Item.Meta
+              onClick={() => {
+                setOpen(true);
+                setTask(item);
+              }}
               title={
                 <div className="flex">
                   <h1

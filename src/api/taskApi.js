@@ -31,7 +31,10 @@ export const updateTask = async (data) => {};
 
 export const deleteTask = async (id) => {};
 
-export const inviteMember = async (data) => {};
+export const inviteMember = async (data, id) => {
+  const url = `/tasks/${id}/members`;
+  return await axiosApi.post(url, data);
+};
 
 export const getAllTags = async () => {
   const url = '/tags';

@@ -5,4 +5,7 @@ export const APP_ROUTES = {
   GOOGLE_CALLBACK: '/callback/google',
   SHARING: '/sharing',
   HISTORY: '/history',
+  NOTI: '/notifications',
+  ADMIN_LOGIN: '/admin/login',
+  ADMIN_NOTI: '/admin/notifications',
 };

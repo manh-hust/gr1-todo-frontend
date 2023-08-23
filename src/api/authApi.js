@@ -5,6 +5,11 @@ export const authLogin = async (data) => {
   return await axiosApi.post(url, data);
 };
 
+export const authAdminLogin = async (data) => {
+  const url = '/auth/admin/login';
+  return await axiosApi.post(url, data);
+};
+
 export const register = async (data) => {
   const url = '/auth/register';
   return await axiosApi.post(url, data);
